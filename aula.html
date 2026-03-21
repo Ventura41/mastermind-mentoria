@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MasterMind — Aula</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#080808;--card:#111;--card2:#161616;--border:rgba(255,255,255,.07);--gold:#f5a623;--green:#22c55e;--text:#f2f2f2;--muted:#777;--dim:#444}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:2px}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;background:rgba(8,8,8,.97);border-bottom:1px solid var(--border);backdrop-filter:blur(12px)}
+.nav-left{display:flex;align-items:center;gap:16px}
+.back-btn{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:13px;text-decoration:none;transition:color .2s}
+.back-btn:hover{color:var(--text)}
+.nav-sep{width:1px;height:18px;background:var(--border)}
+.nav-lesson-title{font-size:13px;font-weight:500;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;background:linear-gradient(90deg,#f5a623,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#c026d3);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:#fff;border:2px solid rgba(245,166,35,.3)}
+
+/* LAYOUT */
+.layout{display:grid;grid-template-columns:1fr 360px;min-height:100vh;padding-top:60px}
+.main-col{display:flex;flex-direction:column}
+.sidebar{background:var(--card);border-left:1px solid var(--border);display:flex;flex-direction:column;height:calc(100vh - 60px);position:sticky;top:60px;overflow:hidden}
+
+/* VIDEO AREA */
+.video-wrap{background:#000;aspect-ratio:16/9;position:relative;width:100%}
+.video-iframe{width:100%;height:100%;border:none;display:block}
+.video-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:linear-gradient(135deg,#0c0020,#0a1428);cursor:pointer;transition:all .2s}
+.video-placeholder:hover .vp-play{transform:scale(1.1);box-shadow:0 0 40px rgba(245,166,35,.5)}
+.vp-icon{font-size:52px}
+.vp-play{width:70px;height:70px;background:linear-gradient(135deg,#d97706,#f5a623);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px rgba(245,166,35,.35);transition:all .3s}
+.vp-tri{width:0;height:0;border-top:13px solid transparent;border-bottom:13px solid transparent;border-left:22px solid #000;margin-left:4px}
+.vp-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#fff}
+.vp-sub{font-size:13px;color:var(--muted)}
+.vp-url-form{display:flex;gap:8px;padding:0 24px;margin-top:4px;width:100%;max-width:500px}
+.vp-url-input{flex:1;background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:6px;padding:8px 12px;color:var(--text);font-size:12px;outline:none;transition:border-color .2s}
+.vp-url-input:focus{border-color:rgba(245,166,35,.4)}
+.vp-url-input::placeholder{color:var(--dim)}
+.vp-url-btn{background:linear-gradient(135deg,#d97706,#f5a623);color:#000;font-family:'Syne',sans-serif;font-size:11px;font-weight:800;padding:8px 14px;border-radius:6px;border:none;cursor:pointer;white-space:nowrap;transition:all .2s}
+.vp-url-btn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(245,166,35,.3)}
+
+/* LESSON INFO */
+.lesson-info{padding:24px 28px;border-bottom:1px solid var(--border)}
+.lesson-breadcrumb{font-size:11px;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.lesson-breadcrumb span{color:var(--dim)}
+.lesson-h1{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;letter-spacing:-.5px;line-height:1.2;margin-bottom:10px}
+.lesson-meta{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.lmeta{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
+.lmeta-sep{width:1px;height:12px;background:var(--dim)}
+.completed-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:4px;padding:3px 9px;font-size:11px;font-weight:700;color:var(--green)}
+
+/* ACTIONS */
+.lesson-actions{padding:18px 28px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.btn-complete{display:flex;align-items:center;gap:7px;background:linear-gradient(135deg,#d97706,#f5a623);color:#000;font-family:'Syne',sans-serif;font-size:12px;font-weight:800;padding:10px 18px;border-radius:6px;border:none;cursor:pointer;transition:all .2s;letter-spacing:.3px}
+.btn-complete:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(245,166,35,.3)}
+.btn-complete.done{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)}
+.btn-complete.done:hover{transform:none;box-shadow:none}
+.btn-nav{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.06);color:var(--text);font-size:12px;font-weight:600;padding:10px 16px;border-radius:6px;border:1px solid var(--border);cursor:pointer;transition:all .2s;text-decoration:none}
+.btn-nav:hover{background:rgba(255,255,255,.1)}
+.btn-nav:disabled{opacity:.4;cursor:not-allowed}
+
+/* DESCRIPTION */
+.lesson-desc{padding:24px 28px;border-bottom:1px solid var(--border)}
+.lesson-desc h3{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:10px}
+.lesson-desc p{font-size:13.5px;color:var(--muted);line-height:1.75}
+
+/* SIDEBAR — LESSON LIST */
+.sidebar-header{padding:18px 20px;border-bottom:1px solid var(--border)}
+.sidebar-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;margin-bottom:4px}
+.sidebar-sub{font-size:11px;color:var(--muted)}
+.sidebar-prog{margin-top:10px}
+.sp-label{display:flex;justify-content:space-between;font-size:10px;color:var(--dim);margin-bottom:5px}
+.sp-label span:last-child{color:var(--muted);font-weight:600}
+.sp-bar{height:2px;background:rgba(255,255,255,.06);border-radius:1px}
+.sp-fill{height:100%;background:linear-gradient(90deg,#d97706,#f5a623);border-radius:1px;transition:width 1s ease}
+.sidebar-list{flex:1;overflow-y:auto;padding:8px 0}
+.mod-group{}
+.mod-group-header{padding:10px 20px 8px;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--dim);display:flex;align-items:center;gap:8px;cursor:pointer;transition:color .2s}
+.mod-group-header:hover{color:var(--muted)}
+.mod-group-header .mod-icon{font-size:14px}
+.lesson-item{display:flex;align-items:center;gap:10px;padding:9px 20px;cursor:pointer;transition:background .15s;text-decoration:none;color:inherit;border-left:3px solid transparent}
+.lesson-item:hover{background:rgba(255,255,255,.04)}
+.lesson-item.active{background:rgba(245,166,35,.07);border-left-color:var(--gold)}
+.li-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--dim);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;transition:all .2s}
+.li-check.done{background:rgba(34,197,94,.15);border-color:var(--green);color:var(--green)}
+.li-check.active{border-color:var(--gold)}
+.li-info{flex:1;min-width:0}
+.li-title{font-size:12.5px;font-weight:500;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lesson-item.active .li-title{color:var(--gold);font-weight:600}
+.li-dur{font-size:10px;color:var(--dim);flex-shrink:0}
+
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .nav-lesson-title{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-left">
+    <a href="plataforma.html" class="back-btn">← Plataforma</a>
+    <div class="nav-sep"></div>
+    <div class="nav-lesson-title" id="nav-lesson-title">Carregando...</div>
+  </div>
+  <a href="plataforma.html" class="logo">MasterMind</a>
+  <div class="nav-right">
+    <div class="nav-avatar" id="nav-avatar">J</div>
+  </div>
+</nav>
+
+<div class="layout">
+  <!-- MAIN COLUMN -->
+  <div class="main-col">
+
+    <!-- VIDEO -->
+    <div class="video-wrap" id="video-wrap">
+      <div class="video-placeholder" id="video-placeholder">
+        <div class="vp-icon" id="vp-icon">▶</div>
+        <div class="vp-play"><div class="vp-tri"></div></div>
+        <div class="vp-title" id="vp-title">Carregando aula...</div>
+        <div class="vp-sub">Cole o link do vídeo abaixo para assistir</div>
+        <div class="vp-url-form">
+          <input type="url" class="vp-url-input" id="video-url-input" placeholder="https://www.youtube.com/watch?v=... ou link do Panda Video"/>
+          <button class="vp-url-btn" onclick="loadVideo()">Carregar ▶</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- INFO -->
+    <div class="lesson-info" id="lesson-info">
+      <div class="lesson-breadcrumb">
+        <span id="mod-name">Módulo</span> › <span style="color:var(--text)" id="lesson-ep">Aula</span>
+      </div>
+      <h1 class="lesson-h1" id="lesson-title">Carregando...</h1>
+      <div class="lesson-meta">
+        <div class="lmeta">⏱ <span id="lesson-dur">--:--</span></div>
+        <div class="lmeta-sep"></div>
+        <div class="lmeta" id="completed-wrap" style="display:none">
+          <span class="completed-badge">✓ Concluída</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="lesson-actions">
+      <button class="btn-complete" id="btn-complete" onclick="toggleComplete()">✓ Marcar como concluída</button>
+      <a href="#" class="btn-nav" id="btn-prev">← Anterior</a>
+      <a href="#" class="btn-nav" id="btn-next">Próxima →</a>
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="lesson-desc">
+      <h3>Sobre esta aula</h3>
+      <p id="lesson-description">Carregando descrição...</p>
+    </div>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-title" id="sb-module-title">Conteúdo do módulo</div>
+      <div class="sidebar-sub" id="sb-module-sub">Carregando...</div>
+      <div class="sidebar-prog">
+        <div class="sp-label"><span>Progresso do módulo</span><span id="sb-pct">0%</span></div>
+        <div class="sp-bar"><div class="sp-fill" id="sb-fill" style="width:0%"></div></div>
+      </div>
+    </div>
+    <div class="sidebar-list" id="sidebar-list"></div>
+  </div>
+</div>
+
+<script>
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const params = new URLSearchParams(location.search);
+const lessonId = params.get('id');
+let currentLesson = null, allLessons = [], allModules = [], userProgress = {};
+
+function fmtDur(s){
+  if(!s) return '--:--';
+  const m=Math.floor(s/60),sec=s%60;
+  return `${m}:${sec.toString().padStart(2,'0')}`;
+}
+
+function loadVideo() {
+  const url = document.getElementById('video-url-input').value.trim();
+  if (!url) return;
+  const wrap = document.getElementById('video-wrap');
+
+  let embedUrl = url;
+  // Convert YouTube watch URL to embed
+  const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\s]+)/);
+  if (ytMatch) embedUrl = `https://www.youtube.com/embed/${ytMatch[1]}?rel=0&autoplay=1`;
+
+  // Vimeo
+  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
+  if (vimeoMatch) embedUrl = `https://player.vimeo.com/video/${vimeoMatch[1]}?autoplay=1`;
+
+  wrap.innerHTML = `<iframe class="video-iframe" src="${embedUrl}" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>`;
+}
+
+async function toggleComplete() {
+  if (!currentLesson) return;
+  const { data: { user } } = await sb.auth.getUser();
+  const current = userProgress[currentLesson.id] || {};
+  const newDone = !current.completed;
+
+  await sb.from('progress').upsert({
+    user_id: user.id,
+    lesson_id: currentLesson.id,
+    completed: newDone,
+    watched_seconds: newDone ? (currentLesson.duration_seconds || 0) : (current.watched_seconds || 0),
+    last_watched_at: new Date().toISOString()
+  }, { onConflict: 'user_id,lesson_id' });
+
+  userProgress[currentLesson.id] = { ...current, completed: newDone };
+  renderCompleted(newDone);
+  renderSidebar();
+}
+
+function renderCompleted(done) {
+  const btn = document.getElementById('btn-complete');
+  const badge = document.getElementById('completed-wrap');
+  if (done) {
+    btn.textContent = '✓ Concluída';
+    btn.classList.add('done');
+    badge.style.display = 'flex';
+  } else {
+    btn.textContent = '✓ Marcar como concluída';
+    btn.classList.remove('done');
+    badge.style.display = 'none';
+  }
+}
+
+function renderSidebar() {
+  if (!currentLesson) return;
+  const mod = allModules.find(m => m.id === currentLesson.module_id);
+  if (!mod) return;
+  const modLessons = allLessons.filter(l => l.module_id === mod.id).sort((a,b) => a.order - b.order);
+  const done = modLessons.filter(l => (userProgress[l.id]||{}).completed).length;
+  const pct = modLessons.length > 0 ? Math.round(done/modLessons.length*100) : 0;
+
+  document.getElementById('sb-module-title').textContent = mod.title;
+  document.getElementById('sb-module-sub').textContent = `${done} de ${modLessons.length} aulas concluídas`;
+  document.getElementById('sb-pct').textContent = pct + '%';
+  setTimeout(() => { document.getElementById('sb-fill').style.width = pct + '%'; }, 300);
+
+  const list = document.getElementById('sidebar-list');
+  // Group all lessons by module
+  let html = '';
+  allModules.forEach(m => {
+    const mLessons = allLessons.filter(l => l.module_id === m.id).sort((a,b) => a.order - b.order);
+    html += `<div class="mod-group">
+      <div class="mod-group-header"><span class="mod-icon">${m.icon||'📚'}</span>${m.title}</div>`;
+    mLessons.forEach(l => {
+      const isDone = (userProgress[l.id]||{}).completed;
+      const isActive = l.id === currentLesson.id;
+      html += `<a href="aula.html?id=${l.id}" class="lesson-item${isActive?' active':''}">
+        <div class="li-check${isDone?' done':''}${isActive&&!isDone?' active':''}">${isDone?'✓':l.order}</div>
+        <div class="li-info"><div class="li-title">${l.title}</div></div>
+        <div class="li-dur">${fmtDur(l.duration_seconds)}</div>
+      </a>`;
+    });
+    html += '</div>';
+  });
+  list.innerHTML = html;
+
+  // Scroll active item into view
+  setTimeout(() => {
+    const activeItem = list.querySelector('.lesson-item.active');
+    if (activeItem) activeItem.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }, 200);
+}
+
+async function init() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = 'login.html'; return; }
+
+  const user = session.user;
+  const { data: profile } = await sb.from('profiles').select('*').eq('id', user.id).single();
+  const name = (profile?.full_name || user.email.split('@')[0]).split(' ')[0];
+  document.getElementById('nav-avatar').textContent = name[0].toUpperCase();
+
+  // Load all data
+  const [{ data: modules }, { data: lessons }, { data: progressRows }] = await Promise.all([
+    sb.from('modules').select('*').order('order'),
+    sb.from('lessons').select('*').order('order'),
+    sb.from('progress').select('*').eq('user_id', user.id)
+  ]);
+
+  allModules = modules || [];
+  allLessons = lessons || [];
+  (progressRows||[]).forEach(p => { userProgress[p.lesson_id] = p; });
+
+  if (!lessonId) {
+    // Default to first lesson
+    if (allLessons.length > 0) window.location.href = `aula.html?id=${allLessons[0].id}`;
+    return;
+  }
+
+  currentLesson = allLessons.find(l => l.id === lessonId);
+  if (!currentLesson) { window.location.href = 'plataforma.html'; return; }
+
+  const mod = allModules.find(m => m.id === currentLesson.module_id);
+  const modLessons = allLessons.filter(l => l.module_id === currentLesson.module_id).sort((a,b) => a.order - b.order);
+  const allSorted = allLessons.sort((a,b) => {
+    const ma = allModules.find(m => m.id === a.module_id);
+    const mb = allModules.find(m => m.id === b.module_id);
+    if (ma?.order !== mb?.order) return (ma?.order||0) - (mb?.order||0);
+    return a.order - b.order;
+  });
+  const currentIdx = allSorted.findIndex(l => l.id === lessonId);
+  const prevLesson = currentIdx > 0 ? allSorted[currentIdx - 1] : null;
+  const nextLesson = currentIdx < allSorted.length - 1 ? allSorted[currentIdx + 1] : null;
+
+  // Update UI
+  document.title = `${currentLesson.title} — MasterMind`;
+  document.getElementById('nav-lesson-title').textContent = currentLesson.title;
+  document.getElementById('vp-title').textContent = currentLesson.title;
+  document.getElementById('vp-icon').textContent = mod?.icon || '▶';
+  document.getElementById('mod-name').textContent = mod?.title || 'Módulo';
+  document.getElementById('lesson-ep').textContent = `Aula ${currentLesson.order}`;
+  document.getElementById('lesson-title').textContent = currentLesson.title;
+  document.getElementById('lesson-dur').textContent = fmtDur(currentLesson.duration_seconds);
+  document.getElementById('lesson-description').textContent = currentLesson.description || 'Assista à aula para ver a descrição completa.';
+
+  // Pre-fill video URL if saved
+  if (currentLesson.video_url) {
+    document.getElementById('video-url-input').value = currentLesson.video_url;
+    loadVideo();
+  }
+
+  // Nav buttons
+  if (prevLesson) document.getElementById('btn-prev').href = `aula.html?id=${prevLesson.id}`;
+  else { document.getElementById('btn-prev').removeAttribute('href'); document.getElementById('btn-prev').style.opacity = '.35'; }
+  if (nextLesson) document.getElementById('btn-next').href = `aula.html?id=${nextLesson.id}`;
+  else { document.getElementById('btn-next').removeAttribute('href'); document.getElementById('btn-next').style.opacity = '.35'; }
+
+  // Completed state
+  renderCompleted((userProgress[lessonId]||{}).completed);
+
+  // Sidebar
+  renderSidebar();
+
+  // Track progress on load
+  const prog = userProgress[lessonId] || {};
+  if (!prog.completed) {
+    await sb.from('progress').upsert({
+      user_id: user.id,
+      lesson_id: lessonId,
+      watched_seconds: prog.watched_seconds || 0,
+      completed: false,
+      last_watched_at: new Date().toISOString()
+    }, { onConflict: 'user_id,lesson_id' });
+  }
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MasterMind — Finalizar Compra</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#080808;--card:#111;--card2:#161616;--border:rgba(255,255,255,.07);--gold:#f5a623;--green:#22c55e;--text:#f2f2f2;--muted:#777;--dim:#444}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh}
+.bg{position:fixed;inset:0;background:radial-gradient(ellipse 60% 50% at 30% 40%,rgba(124,58,237,.12) 0%,transparent 70%);pointer-events:none}
+
+.nav{height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 40px;border-bottom:1px solid var(--border);position:relative;z-index:10}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;background:linear-gradient(90deg,#f5a623,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none}
+.secure-badge{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+
+.layout{display:grid;grid-template-columns:1fr 440px;max-width:1000px;margin:0 auto;gap:40px;padding:48px 24px;position:relative;z-index:1}
+
+/* LEFT */
+.order-summary{}
+.section-label{font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:20px}
+.product-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:24px}
+.product-header{display:flex;align-items:center;gap:16px;margin-bottom:20px}
+.product-icon{width:56px;height:56px;background:linear-gradient(135deg,rgba(124,58,237,.2),rgba(245,166,35,.15));border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:26px;border:1px solid rgba(245,166,35,.15)}
+.product-name{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;margin-bottom:4px}
+.product-sub{font-size:12.5px;color:var(--muted)}
+.product-features{list-style:none;display:flex;flex-direction:column;gap:9px}
+.pf-item{display:flex;align-items:center;gap:9px;font-size:13px;color:rgba(255,255,255,.75)}
+.pf-item::before{content:'✓';color:var(--green);font-weight:800;font-size:11px;flex-shrink:0}
+.price-breakdown{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 24px;margin-bottom:24px}
+.pb-row{display:flex;justify-content:space-between;font-size:13.5px;padding:6px 0}
+.pb-row.total{border-top:1px solid var(--border);margin-top:8px;padding-top:14px;font-family:'Syne',sans-serif;font-size:18px;font-weight:800}
+.pb-row.total .pb-val{color:var(--gold)}
+.pb-label{color:var(--muted)}
+.pb-discount{color:var(--green);font-size:12px}
+.guarantee-box{background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.15);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px;font-size:12.5px;color:rgba(255,255,255,.7)}
+.gb-icon{font-size:22px;flex-shrink:0}
+
+/* RIGHT — FORM */
+.checkout-form{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;position:sticky;top:24px}
+.form-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px}
+.form-sub{font-size:13px;color:var(--muted);margin-bottom:24px}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:7px;letter-spacing:.4px;text-transform:uppercase}
+.field input{width:100%;background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:12px 14px;color:var(--text);font-size:14px;font-family:'Inter',sans-serif;transition:border-color .2s;outline:none}
+.field input:focus{border-color:rgba(245,166,35,.4)}
+.field input::placeholder{color:#3a3a3a}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.payment-methods{margin-bottom:20px}
+.pm-label{font-size:11px;font-weight:700;color:var(--muted);margin-bottom:10px;letter-spacing:.4px;text-transform:uppercase}
+.pm-tabs{display:flex;gap:8px}
+.pm-tab{flex:1;padding:10px;text-align:center;background:#161616;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);transition:all .2s}
+.pm-tab.active{border-color:rgba(245,166,35,.4);background:rgba(245,166,35,.07);color:var(--text)}
+.pm-content{display:none}
+.pm-content.active{display:block}
+.pix-box{background:#161616;border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center;margin-top:12px}
+.pix-icon{font-size:36px;margin-bottom:10px}
+.pix-text{font-size:13px;color:var(--muted);line-height:1.6}
+.pix-text strong{color:var(--text);display:block;margin-bottom:4px}
+.error-msg{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:10px 14px;font-size:13px;color:#f87171;margin-bottom:16px;display:none}
+.btn-pay{width:100%;background:linear-gradient(135deg,#d97706,#f5a623,#fbbf24);color:#000;font-family:'Syne',sans-serif;font-size:15px;font-weight:800;padding:16px;border-radius:8px;border:none;cursor:pointer;transition:all .25s;letter-spacing:.3px;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:8px}
+.btn-pay:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(245,166,35,.4)}
+.btn-pay:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.form-footer{margin-top:14px;display:flex;flex-direction:column;gap:6px;align-items:center}
+.form-footer span{font-size:11px;color:var(--dim);display:flex;align-items:center;gap:5px}
+
+/* SUCCESS SCREEN */
+#success-screen{display:none;position:fixed;inset:0;background:var(--bg);z-index:500;align-items:center;justify-content:center;flex-direction:column;gap:16px;text-align:center;padding:24px}
+.success-icon{font-size:64px;animation:pop .5s ease}
+@keyframes pop{0%{transform:scale(0)}80%{transform:scale(1.1)}100%{transform:scale(1)}}
+.success-h2{font-family:'Syne',sans-serif;font-size:32px;font-weight:800}
+.success-p{font-size:15px;color:var(--muted);line-height:1.7;max-width:400px}
+.btn-access{background:linear-gradient(135deg,#d97706,#f5a623);color:#000;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;padding:14px 32px;border-radius:8px;border:none;cursor:pointer;text-decoration:none;display:inline-block;margin-top:8px;transition:all .2s}
+.btn-access:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(245,166,35,.35)}
+
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr}.nav{padding:0 20px}.checkout-form{position:static}
+}
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<nav class="nav">
+  <a href="index.html" class="logo">MasterMind</a>
+  <div class="secure-badge">🔒 Checkout seguro</div>
+</nav>
+
+<!-- SUCCESS SCREEN -->
+<div id="success-screen">
+  <div class="success-icon">🎉</div>
+  <h2 class="success-h2">Pagamento confirmado!</h2>
+  <p class="success-p">Seu acesso ao MasterMind está liberado. Bem-vindo à jornada de transformação.</p>
+  <a href="plataforma.html" class="btn-access">Acessar a Plataforma →</a>
+</div>
+
+<div class="layout">
+
+  <!-- LEFT: ORDER SUMMARY -->
+  <div class="order-summary">
+    <div class="section-label">Seu pedido</div>
+
+    <div class="product-card">
+      <div class="product-header">
+        <div class="product-icon">◆</div>
+        <div>
+          <div class="product-name">MasterMind</div>
+          <div class="product-sub">Mentoria Completa — Acesso Vitalício</div>
+        </div>
+      </div>
+      <ul class="product-features">
+        <li class="pf-item">5 módulos completos com 32 aulas</li>
+        <li class="pf-item">Bônus: Masterclasses e entrevistas exclusivas</li>
+        <li class="pf-item">Materiais: workbook, planilhas e templates</li>
+        <li class="pf-item">Comunidade exclusiva de alunos</li>
+        <li class="pf-item">Acesso vitalício com atualizações</li>
+        <li class="pf-item">Certificado de conclusão</li>
+      </ul>
+    </div>
+
+    <div class="price-breakdown">
+      <div class="pb-row"><span class="pb-label">Valor original</span><span style="text-decoration:line-through;color:var(--dim)">R$ 1.997,00</span></div>
+      <div class="pb-row"><span class="pb-label">Desconto especial</span><span class="pb-discount">- R$ 1.000,00</span></div>
+      <div class="pb-row total"><span>Total</span><span class="pb-val">R$ 997,00</span></div>
+      <div style="font-size:11.5px;color:var(--muted);margin-top:8px;text-align:center">ou 12x de R$ 97,90 sem juros no cartão</div>
+    </div>
+
+    <div class="guarantee-box">
+      <div class="gb-icon">🛡️</div>
+      <div><strong style="color:var(--text);font-size:13px">Garantia de 7 dias</strong><br/>Se não ficar satisfeito, devolvemos 100% do valor. Sem perguntas.</div>
+    </div>
+  </div>
+
+  <!-- RIGHT: CHECKOUT FORM -->
+  <div class="checkout-form">
+    <div class="form-title">Finalizar compra</div>
+    <div class="form-sub">Preencha seus dados para criar seu acesso</div>
+
+    <div id="error-box" class="error-msg"></div>
+
+    <form id="checkout-form" onsubmit="processPayment(event)">
+      <div class="field">
+        <label>Nome completo</label>
+        <input type="text" id="full-name" placeholder="Seu nome completo" required/>
+      </div>
+      <div class="field">
+        <label>E-mail</label>
+        <input type="email" id="email" placeholder="seu@email.com" required/>
+      </div>
+      <div class="field">
+        <label>CPF</label>
+        <input type="text" id="cpf" placeholder="000.000.000-00" maxlength="14" required/>
+      </div>
+      <div class="field">
+        <label>Telefone (WhatsApp)</label>
+        <input type="tel" id="phone" placeholder="(11) 99999-9999"/>
+      </div>
+
+      <div class="payment-methods">
+        <div class="pm-label">Forma de pagamento</div>
+        <div class="pm-tabs">
+          <div class="pm-tab active" onclick="setPayment('card')">💳 Cartão</div>
+          <div class="pm-tab" onclick="setPayment('pix')">⚡ PIX</div>
+        </div>
+
+        <!-- CARD -->
+        <div class="pm-content active" id="pm-card" style="margin-top:16px">
+          <div class="field">
+            <label>Número do cartão</label>
+            <input type="text" id="card-number" placeholder="0000 0000 0000 0000" maxlength="19"/>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Validade</label>
+              <input type="text" id="card-expiry" placeholder="MM/AA" maxlength="5"/>
+            </div>
+            <div class="field">
+              <label>CVV</label>
+              <input type="text" id="card-cvv" placeholder="123" maxlength="4"/>
+            </div>
+          </div>
+          <div class="field">
+            <label>Nome no cartão</label>
+            <input type="text" id="card-name" placeholder="Como aparece no cartão"/>
+          </div>
+          <div class="field">
+            <label>Parcelas</label>
+            <select id="installments" style="width:100%;background:#161616;border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:12px 14px;color:var(--text);font-size:14px;font-family:'Inter',sans-serif;outline:none;cursor:pointer">
+              <option value="1">1x de R$ 997,00 (à vista)</option>
+              <option value="6">6x de R$ 166,17 (sem juros)</option>
+              <option value="12">12x de R$ 97,90 (sem juros)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- PIX -->
+        <div class="pm-content" id="pm-pix">
+          <div class="pix-box">
+            <div class="pix-icon">⚡</div>
+            <div class="pix-text">
+              <strong>PIX — Aprovação instantânea</strong>
+              Após clicar em "Finalizar", você receberá o QR Code do PIX. O acesso é liberado imediatamente após a confirmação.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-pay" id="btn-pay">
+        🔒 Finalizar e Pagar R$ 997,00
+      </button>
+
+      <div class="form-footer">
+        <span>🔒 Dados criptografados e seguros</span>
+        <span>✓ Ambiente protegido SSL/TLS</span>
+      </div>
+    </form>
+  </div>
+
+</div>
+
+<script>
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let paymentMethod = 'card';
+
+function setPayment(method) {
+  paymentMethod = method;
+  document.querySelectorAll('.pm-tab').forEach((t,i) => t.classList.toggle('active', (i===0&&method==='card')||(i===1&&method==='pix')));
+  document.getElementById('pm-card').classList.toggle('active', method==='card');
+  document.getElementById('pm-pix').classList.toggle('active', method==='pix');
+  document.getElementById('btn-pay').textContent = method==='pix' ? '⚡ Gerar QR Code PIX' : '🔒 Finalizar e Pagar R$ 997,00';
+}
+
+// CPF mask
+document.getElementById('cpf').addEventListener('input', function() {
+  let v = this.value.replace(/\D/g,'');
+  v = v.replace(/(\d{3})(\d)/,'$1.$2');
+  v = v.replace(/(\d{3})(\d)/,'$1.$2');
+  v = v.replace(/(\d{3})(\d{1,2})$/,'$1-$2');
+  this.value = v;
+});
+// Card mask
+document.getElementById('card-number').addEventListener('input', function() {
+  let v = this.value.replace(/\D/g,'').substring(0,16);
+  v = v.replace(/(.{4})/g,'$1 ').trim();
+  this.value = v;
+});
+document.getElementById('card-expiry').addEventListener('input', function() {
+  let v = this.value.replace(/\D/g,'');
+  if (v.length >= 2) v = v.substring(0,2) + '/' + v.substring(2,4);
+  this.value = v;
+});
+
+function showError(msg) {
+  const el = document.getElementById('error-box');
+  el.textContent = msg; el.style.display = 'block';
+  el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+async function processPayment(e) {
+  e.preventDefault();
+  const btn = document.getElementById('btn-pay');
+  btn.disabled = true;
+  btn.textContent = 'Processando...';
+  document.getElementById('error-box').style.display = 'none';
+
+  const name     = document.getElementById('full-name').value.trim();
+  const email    = document.getElementById('email').value.trim();
+  const cpf      = document.getElementById('cpf').value.trim();
+  const phone    = document.getElementById('phone').value.trim();
+  const installments = document.getElementById('installments')?.value || '1';
+
+  try {
+    // ── SEGURO: chama Edge Function no servidor (segredos nunca saem do backend) ──
+    const res = await fetch(
+      `${SUPABASE_URL}/functions/v1/create-checkout`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name, email, cpf, phone,
+          payment_method: paymentMethod,
+          installments,
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || data.error) {
+      throw new Error(data.error || 'Erro ao processar pagamento');
+    }
+
+    // Redireciona para o checkout do Mercado Pago
+    // Em sandbox use data.sandbox_url, em produção use data.checkout_url
+    const checkoutUrl = data.sandbox_url || data.checkout_url;
+    window.location.href = checkoutUrl;
+
+  } catch (err) {
+    showError(err.message || 'Erro ao processar. Tente novamente.');
+    btn.disabled = false;
+    btn.textContent = paymentMethod==='pix' ? '⚡ Gerar QR Code PIX' : '🔒 Finalizar e Pagar R$ 997,00';
+  }
+}
+</script>
+</body>
+</html>
