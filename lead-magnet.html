@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>7 Princípios Bíblicos para o Empresário do Reino — Grátis</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --black:#060606;
+  --black2:#0e0e0e;
+  --black3:#161616;
+  --gold:#c9a84c;
+  --gold2:#e8c97a;
+  --gold3:#8c6e2d;
+  --white:#ffffff;
+  --muted:rgba(255,255,255,.55);
+  --dim:rgba(255,255,255,.3);
+  --border:rgba(201,168,76,.2);
+  --red:#c0392b;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--black);color:var(--white);
+  font-family:'Montserrat',sans-serif;
+  min-height:100vh;-webkit-font-smoothing:antialiased;
+}
+
+/* ── NAV ── */
+.nav{
+  background:var(--black2);border-bottom:1px solid var(--border);
+  padding:16px 32px;display:flex;align-items:center;justify-content:center;
+}
+.logo{font-weight:700;font-size:13px;letter-spacing:3px;text-transform:uppercase}
+.logo span{color:var(--gold)}
+
+/* ── HERO ── */
+.hero{
+  max-width:760px;margin:0 auto;padding:64px 24px 48px;text-align:center;
+}
+.hero-tag{
+  font-size:10px;font-weight:700;letter-spacing:5px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:24px;display:flex;align-items:center;justify-content:center;gap:12px;
+}
+.hero-tag::before,.hero-tag::after{content:'';flex:1;max-width:40px;height:1px;background:var(--gold3)}
+.hero-title{
+  font-size:clamp(32px,6vw,52px);font-weight:800;line-height:1.08;
+  letter-spacing:-1.5px;margin-bottom:16px;
+}
+.hero-title em{font-style:italic;font-weight:400;color:var(--gold2)}
+.hero-sub{
+  font-size:16px;color:var(--muted);line-height:1.75;
+  max-width:560px;margin:0 auto 40px;
+}
+
+/* ── PDF PREVIEW ── */
+.pdf-preview{
+  border:1px solid var(--border);background:var(--black2);
+  padding:32px;margin-bottom:48px;position:relative;
+  display:flex;align-items:center;gap:28px;text-align:left;
+}
+.pdf-icon{
+  width:80px;height:100px;background:var(--black3);border:1px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  flex-shrink:0;position:relative;
+}
+.pdf-icon::before{
+  content:'♛';font-size:28px;color:var(--gold);display:block;margin-bottom:6px;
+}
+.pdf-icon::after{
+  content:'PDF';font-size:8px;font-weight:700;letter-spacing:2px;color:var(--gold3);
+}
+.pdf-info{}
+.pdf-num{font-size:40px;font-weight:800;color:var(--gold);letter-spacing:-2px;line-height:1}
+.pdf-title{font-size:18px;font-weight:700;margin-bottom:4px;margin-top:4px}
+.pdf-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.pdf-badge{
+  position:absolute;top:-1px;right:-1px;
+  background:var(--gold);color:var(--black);
+  font-size:9px;font-weight:800;letter-spacing:2px;padding:5px 12px;
+}
+
+/* ── BULLETS ── */
+.bullets{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  margin-bottom:48px;text-align:left;
+}
+.bullet{
+  display:flex;align-items:flex-start;gap:12px;
+  font-size:13px;color:var(--muted);line-height:1.5;
+  padding:14px;border:1px solid rgba(201,168,76,.12);background:var(--black2);
+}
+.bullet-icon{color:var(--gold);font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* ── FORM ── */
+.form-wrap{
+  border:1px solid var(--border);background:var(--black2);
+  padding:40px 32px;margin-bottom:32px;
+}
+.form-title{
+  font-size:11px;font-weight:700;letter-spacing:4px;text-transform:uppercase;
+  color:var(--gold);margin-bottom:6px;
+}
+.form-subtitle{font-size:22px;font-weight:700;margin-bottom:28px}
+.form-group{margin-bottom:16px}
+label{
+  display:block;font-size:10px;font-weight:600;letter-spacing:1.5px;
+  text-transform:uppercase;color:var(--muted);margin-bottom:8px;
+}
+input{
+  width:100%;background:var(--black3);border:1px solid rgba(255,255,255,.1);
+  color:var(--white);font-family:'Montserrat',sans-serif;font-size:14px;
+  padding:14px 18px;outline:none;transition:border-color .2s;
+  -webkit-appearance:none;border-radius:0;
+}
+input:focus{border-color:var(--gold)}
+input::placeholder{color:var(--dim)}
+input.error{border-color:var(--red)}
+.error-msg{font-size:11px;color:#e74c3c;margin-top:6px;display:none}
+.error-msg.show{display:block}
+
+.btn-submit{
+  width:100%;background:var(--gold);color:var(--black);
+  font-family:'Montserrat',sans-serif;font-size:12px;font-weight:800;
+  padding:20px;letter-spacing:3px;text-transform:uppercase;
+  border:none;cursor:pointer;transition:all .3s;margin-top:8px;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.btn-submit:hover:not(:disabled){background:var(--gold2)}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed}
+.btn-submit .spinner{
+  width:16px;height:16px;border:2px solid rgba(0,0,0,.3);
+  border-top-color:#000;border-radius:50%;
+  animation:spin .7s linear infinite;display:none;
+}
+.btn-submit.loading .spinner{display:block}
+.btn-submit.loading .btn-text{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.privacy{font-size:10px;color:var(--dim);text-align:center;margin-top:14px;line-height:1.6}
+
+.alert{padding:14px 18px;margin-bottom:16px;font-size:13px;line-height:1.5;display:none}
+.alert.show{display:block}
+.alert.error{background:rgba(192,57,43,.15);border:1px solid rgba(192,57,43,.4);color:#e74c3c}
+
+/* ── SOCIAL PROOF ── */
+.proof{text-align:center;margin-bottom:48px}
+.proof-num{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--dim)}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:var(--border);margin:0 0 48px}
+
+/* ── TEASER ── */
+.teaser{
+  border:1px solid var(--border);background:var(--black2);
+  padding:28px 32px;margin-bottom:48px;
+}
+.teaser-tag{font-size:9px;font-weight:700;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.teaser-list{list-style:none}
+.teaser-list li{
+  display:flex;align-items:flex-start;gap:12px;
+  font-size:13px;color:var(--muted);line-height:1.6;
+  padding:10px 0;border-bottom:1px solid rgba(255,255,255,.05);
+}
+.teaser-list li:last-child{border-bottom:none}
+.teaser-num{color:var(--gold);font-weight:800;font-size:11px;flex-shrink:0;margin-top:2px}
+
+/* ── INSTRUCTOR ── */
+.instructor{
+  display:flex;align-items:center;gap:20px;
+  border:1px solid var(--border);padding:24px;margin-bottom:48px;
+}
+.instr-avatar{
+  width:64px;height:64px;border-radius:50%;
+  background:var(--black3);border:2px solid var(--gold3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;flex-shrink:0;overflow:hidden;
+}
+.instr-avatar img{width:100%;height:100%;object-fit:cover;object-position:center top}
+.instr-name{font-size:15px;font-weight:700;margin-bottom:2px}
+.instr-role{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.instr-bio{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ── FOOTER ── */
+.footer{
+  text-align:center;padding:32px 24px 48px;
+  font-size:11px;color:var(--dim);border-top:1px solid var(--border);
+}
+
+@media(max-width:600px){
+  .bullets{grid-template-columns:1fr}
+  .pdf-preview{flex-direction:column;align-items:flex-start}
+  .form-wrap{padding:28px 20px}
+  .instructor{flex-direction:column;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="logo">Legacy <span>Wisdom</span></div>
+</nav>
+
+<div class="hero">
+
+  <div class="hero-tag">Material Gratuito</div>
+
+  <h1 class="hero-title">
+    7 Princípios Bíblicos<br>
+    para o <em>Empresário do Reino</em>
+  </h1>
+  <p class="hero-sub">
+    O guia prático que nenhuma escola de negócios vai te dar — sabedoria milenar da Palavra de Deus aplicada ao seu negócio, suas finanças e seu legado.
+  </p>
+
+  <!-- PDF Preview -->
+  <div class="pdf-preview">
+    <div class="pdf-badge">GRÁTIS</div>
+    <div class="pdf-icon"></div>
+    <div class="pdf-info">
+      <div class="pdf-num">7</div>
+      <div class="pdf-title">Princípios Bíblicos para o Empresário do Reino</div>
+      <div class="pdf-desc">PDF completo · 9 páginas · Júnior Ventura · Legacy Wisdom<br>Baixe agora, leia hoje, aplique esta semana.</div>
+    </div>
+  </div>
+
+  <!-- Bullets -->
+  <div class="bullets">
+    <div class="bullet">
+      <span class="bullet-icon">✓</span>
+      Por que cristãos fiéis ainda vivem na escassez — e como sair desse ciclo
+    </div>
+    <div class="bullet">
+      <span class="bullet-icon">✓</span>
+      A diferença entre a economia do mundo e a economia do Reino
+    </div>
+    <div class="bullet">
+      <span class="bullet-icon">✓</span>
+      Como a Bíblia fala sobre dinheiro mais do que sobre fé e oração juntos
+    </div>
+    <div class="bullet">
+      <span class="bullet-icon">✓</span>
+      O princípio do mordomo que transforma como você vê seu negócio
+    </div>
+    <div class="bullet">
+      <span class="bullet-icon">✓</span>
+      Como construir riqueza com propósito, estratégia e fé
+    </div>
+    <div class="bullet">
+      <span class="bullet-icon">✓</span>
+      O segredo do legado: o que deixar para filhos e netos
+    </div>
+  </div>
+
+  <!-- FORM -->
+  <div class="form-wrap">
+    <div class="form-title">Acesso imediato</div>
+    <div class="form-subtitle">Preencha e receba o PDF agora</div>
+
+    <div class="alert" id="alert"></div>
+
+    <form id="leadForm" novalidate>
+      <div class="form-group">
+        <label for="name">Seu nome</label>
+        <input type="text" id="name" placeholder="Como você se chama?" autocomplete="name"/>
+        <div class="error-msg" id="name-error">Por favor, insira seu nome.</div>
+      </div>
+      <div class="form-group">
+        <label for="email">Seu melhor e-mail</label>
+        <input type="email" id="email" placeholder="seu@email.com" autocomplete="email"/>
+        <div class="error-msg" id="email-error">Por favor, insira um e-mail válido.</div>
+      </div>
+      <div class="form-group">
+        <label for="phone">WhatsApp (com DDD)</label>
+        <input type="tel" id="phone" placeholder="(11) 99999-9999" autocomplete="tel"/>
+        <div class="error-msg" id="phone-error">Por favor, insira seu WhatsApp.</div>
+      </div>
+
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <span class="btn-text">Quero Meu PDF Grátis →</span>
+        <div class="spinner"></div>
+      </button>
+
+      <p class="privacy">🔒 Seus dados estão seguros. Sem spam — prometemos.</p>
+    </form>
+  </div>
+
+  <!-- Social proof -->
+  <div class="proof">
+    <div class="proof-num">Júnior Ventura · 20 anos de ministério · 80k+ seguidores</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Teaser dos princípios -->
+  <div class="teaser">
+    <div class="teaser-tag">O que você vai aprender</div>
+    <ul class="teaser-list">
+      <li><span class="teaser-num">01</span> Prospere com Propósito — por que a prosperidade começa pelo propósito, não pelo dinheiro</li>
+      <li><span class="teaser-num">02</span> Mordomo, Não Dono — como essa verdade liberta você do peso de ser dono</li>
+      <li><span class="teaser-num">03</span> Multiplique, Não Acumule — investir e semear é o verbo do Reino</li>
+      <li><span class="teaser-num">04</span> Planeje com Sabedoria — fé sem planejamento é presunção</li>
+      <li><span class="teaser-num">05</span> Honre com o Dízimo — o único lugar onde Deus diz "me teste"</li>
+      <li><span class="teaser-num">06</span> Seja Livre das Dívidas — dívida rouba sua liberdade de obedecer</li>
+      <li><span class="teaser-num">07</span> Deixe um Legado — construa algo que ultrapasse você</li>
+    </ul>
+  </div>
+
+  <!-- Instructor -->
+  <div class="instructor">
+    <div class="instr-avatar">
+      <img src="junior-ventura.jpg" alt="Júnior Ventura" onerror="this.style.display='none'"/>
+    </div>
+    <div>
+      <div class="instr-name">Júnior Ventura</div>
+      <div class="instr-role">Mentor · Palestrante · Founder Legacy Wisdom</div>
+      <div class="instr-bio">20 anos de ministério. 15 anos dedicados ao estudo da sabedoria bíblica aplicada aos negócios. Mentor de empresários e líderes cristãos em todo o Brasil.</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <strong style="color:var(--gold);letter-spacing:2px">LEGACY WISDOM</strong> · Júnior Ventura<br>
+  <span style="margin-top:6px;display:block">legacywisdom.com.br · Imersão Reino & Riqueza · 9 de Maio de 2026</span>
+</div>
+
+<script>
+const EDGE_URL = 'https://gersysfqbtvfdbzzqzcw.supabase.co/functions/v1/capture-lead';
+const PDF_URL  = '/7-principios-biblicos.pdf';
+
+document.getElementById('phone').addEventListener('input', function(){
+  let v = this.value.replace(/\D/g,'');
+  if(v.length<=11){
+    v = v.replace(/^(\d{2})(\d)/,'($1) $2');
+    v = v.replace(/(\d{5})(\d{4})$/,'$1-$2');
+  }
+  this.value = v;
+});
+
+function validate(){
+  let ok = true;
+  const name  = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  document.querySelectorAll('input').forEach(i=>i.classList.remove('error'));
+  document.querySelectorAll('.error-msg').forEach(e=>e.classList.remove('show'));
+  if(name.length < 2){
+    document.getElementById('name').classList.add('error');
+    document.getElementById('name-error').classList.add('show');
+    ok = false;
+  }
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    document.getElementById('email').classList.add('error');
+    document.getElementById('email-error').classList.add('show');
+    ok = false;
+  }
+  if(phone.replace(/\D/g,'').length < 10){
+    document.getElementById('phone').classList.add('error');
+    document.getElementById('phone-error').classList.add('show');
+    ok = false;
+  }
+  return ok;
+}
+
+document.getElementById('leadForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  if(!validate()) return;
+
+  const btn = document.getElementById('submitBtn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  const name  = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+
+  try {
+    // Save lead (fire & forget — don't block download on API error)
+    fetch(EDGE_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({name, email, phone, source:'lead-magnet'})
+    }).catch(()=>{});
+
+    // Redirect to success page immediately
+    window.location.href = `lead-sucesso.html?name=${encodeURIComponent(name)}`;
+
+  } catch(err){
+    console.error(err);
+    // Even on error, let them download
+    window.location.href = `lead-sucesso.html?name=${encodeURIComponent(name)}`;
+  }
+});
+</script>
+</body>
+</html>
