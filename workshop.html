@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Workshop Reino & Riqueza — Júnior Ventura</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --dark:#010d14;
+  --teal:#022931;
+  --teal2:#03353f;
+  --bronze:#a47b67;
+  --bronze2:#c4977f;
+  --white:#ffffff;
+  --off:#f5f0eb;
+  --text-muted:rgba(255,255,255,.55);
+  --text-dim:rgba(255,255,255,.35);
+  --border:rgba(255,255,255,.08);
+  --gold:#c9a84c;
+  --gold2:#e8c97a;
+}
+html{scroll-behavior:smooth}
+body{background:var(--dark);color:var(--white);font-family:'Montserrat',sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+::selection{background:rgba(164,123,103,.3);color:#fff}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:var(--teal2)}
+
+/* NAV */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:72px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 64px;
+  transition:background .4s,border-color .4s;
+  border-bottom:1px solid transparent;
+}
+.nav.scrolled{
+  background:rgba(1,13,20,.95);
+  backdrop-filter:blur(16px);
+  border-bottom-color:var(--border);
+}
+.logo{font-weight:700;font-size:15px;letter-spacing:3px;text-transform:uppercase;color:var(--white)}
+.logo span{color:var(--bronze)}
+.nav-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--bronze);color:#fff;
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;
+  padding:12px 28px;letter-spacing:2px;text-transform:uppercase;
+  text-decoration:none;transition:all .3s;
+}
+.nav-cta:hover{background:var(--bronze2)}
+
+/* COUNTDOWN BANNER */
+.countdown-bar{
+  background:linear-gradient(90deg,var(--teal) 0%,rgba(164,123,103,.15) 50%,var(--teal) 100%);
+  border-bottom:1px solid rgba(164,123,103,.2);
+  text-align:center;padding:14px 24px;
+  font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;
+  color:var(--bronze2);margin-top:72px;
+}
+.countdown-bar strong{color:var(--white)}
+
+/* HERO */
+.hero{
+  background:var(--teal);
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;
+  padding:100px 64px 80px;
+  min-height:90vh;
+}
+.hero-overlay{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 70% at 100% 40%,rgba(164,123,103,.1) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 60% at 0% 80%,rgba(201,168,76,.06) 0%,transparent 50%),
+    linear-gradient(135deg,rgba(1,13,20,.85) 0%,rgba(2,41,49,.3) 100%);
+  pointer-events:none;
+}
+.hero-line-v{
+  position:absolute;left:64px;top:0;bottom:0;width:1px;
+  background:linear-gradient(to bottom,transparent,rgba(164,123,103,.25),transparent);
+}
+.hero-content{position:relative;z-index:2;max-width:720px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:10px;
+  border:1px solid rgba(164,123,103,.35);
+  padding:8px 20px;margin-bottom:32px;
+  font-size:10px;font-weight:700;letter-spacing:4px;text-transform:uppercase;
+  color:var(--bronze2);
+}
+.hero-badge-dot{width:6px;height:6px;background:var(--bronze);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero-date-tag{
+  font-size:11px;font-weight:600;letter-spacing:6px;text-transform:uppercase;
+  color:var(--bronze);margin-bottom:24px;
+  display:flex;align-items:center;gap:14px;
+}
+.hero-date-tag::before{content:'';width:28px;height:1px;background:var(--bronze);opacity:.6}
+.hero-h1{
+  font-size:clamp(44px,6vw,78px);
+  font-weight:800;line-height:1.05;
+  letter-spacing:-2px;margin-bottom:20px;
+}
+.hero-h1 em{font-style:italic;font-weight:400;color:var(--bronze2);letter-spacing:-1px}
+.hero-h1 .amp{color:var(--gold);font-style:normal}
+.hero-sub{
+  font-size:16px;font-weight:400;
+  color:var(--text-muted);line-height:1.85;
+  max-width:560px;margin-bottom:16px;
+}
+.hero-sub strong{color:rgba(255,255,255,.85);font-weight:500}
+.hero-promise{
+  font-size:13px;color:var(--bronze2);font-style:italic;
+  margin-bottom:48px;line-height:1.6;max-width:480px;
+}
+.hero-actions{display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:56px}
+.btn-primary{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--bronze);color:#fff;
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;
+  padding:18px 44px;letter-spacing:2.5px;text-transform:uppercase;
+  text-decoration:none;transition:all .3s;border:none;cursor:pointer;
+}
+.btn-primary:hover{background:var(--bronze2);transform:translateY(-1px)}
+.btn-secondary{
+  font-size:12px;font-weight:500;color:var(--text-muted);
+  letter-spacing:1px;text-decoration:none;
+  display:flex;align-items:center;gap:8px;transition:color .3s;
+  background:none;border:none;cursor:pointer;
+}
+.btn-secondary:hover{color:var(--white)}
+.hero-info-strip{
+  display:flex;gap:0;flex-wrap:wrap;
+  border:1px solid var(--border);
+  background:rgba(1,13,20,.5);
+  backdrop-filter:blur(8px);
+  max-width:560px;
+}
+.hinfo{
+  padding:18px 28px;display:flex;align-items:center;gap:12px;
+  border-right:1px solid var(--border);flex:1;min-width:120px;
+}
+.hinfo:last-child{border-right:none}
+.hinfo-icon{color:var(--bronze);font-size:16px;flex-shrink:0}
+.hinfo-label{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:2px}
+.hinfo-val{font-size:12px;font-weight:700;color:var(--white)}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border)}
+
+/* SECTIONS */
+section{padding:100px 64px}
+.container{max-width:1160px;margin:0 auto}
+.eyebrow{
+  font-size:10px;font-weight:600;letter-spacing:8px;text-transform:uppercase;
+  color:var(--bronze);margin-bottom:20px;
+  display:flex;align-items:center;gap:14px;
+}
+.eyebrow::before{content:'';width:24px;height:1px;background:var(--bronze);opacity:.7}
+.section-h2{
+  font-size:clamp(28px,3.5vw,46px);
+  font-weight:700;line-height:1.12;
+  letter-spacing:-.5px;margin-bottom:16px;
+}
+.section-h2 em{font-style:italic;font-weight:400;color:var(--bronze2)}
+.section-sub{font-size:15px;color:var(--text-muted);line-height:1.85;max-width:560px}
+
+/* FOR WHOM */
+.forwho{background:var(--teal)}
+.forwho-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);
+  margin-top:56px;
+}
+.fw-card{
+  background:var(--teal);padding:36px 32px;
+  display:flex;align-items:flex-start;gap:18px;
+  transition:background .3s;
+}
+.fw-card:hover{background:var(--teal2)}
+.fw-dot{
+  width:8px;height:8px;background:var(--bronze);border-radius:50%;
+  flex-shrink:0;margin-top:6px;
+}
+.fw-text{font-size:14px;color:rgba(255,255,255,.8);line-height:1.7;font-weight:400}
+.fw-text strong{color:var(--white);font-weight:600;display:block;margin-bottom:4px;font-size:15px}
+
+/* AGENDA */
+.agenda-section{background:var(--dark)}
+.agenda-grid{
+  display:flex;flex-direction:column;
+  border:1px solid var(--border);
+  margin-top:56px;
+}
+.agenda-item{
+  display:grid;grid-template-columns:120px 1fr;
+  border-bottom:1px solid var(--border);
+  transition:background .3s;
+}
+.agenda-item:last-child{border-bottom:none}
+.agenda-item:hover{background:rgba(2,41,49,.4)}
+.agenda-time{
+  padding:28px 24px;
+  border-right:1px solid var(--border);
+  font-size:11px;font-weight:700;letter-spacing:2px;
+  color:var(--bronze);display:flex;align-items:center;
+  justify-content:center;text-align:center;
+}
+.agenda-content{padding:28px 32px}
+.agenda-title{font-size:16px;font-weight:700;color:var(--white);margin-bottom:6px;letter-spacing:-.1px}
+.agenda-desc{font-size:13px;color:var(--text-muted);line-height:1.7}
+.agenda-tag{
+  display:inline-block;margin-top:10px;
+  font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  color:var(--bronze);border:1px solid rgba(164,123,103,.3);
+  padding:4px 10px;
+}
+
+/* WHAT YOU LEARN */
+.learns-section{background:var(--teal)}
+.learns-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);
+  margin-top:56px;
+}
+.learn-card{
+  background:var(--teal);padding:40px 32px;
+  transition:background .3s;
+}
+.learn-card:hover{background:var(--teal2)}
+.learn-num{
+  font-size:9px;font-weight:700;letter-spacing:4px;text-transform:uppercase;
+  color:var(--text-dim);margin-bottom:20px;
+}
+.learn-icon{
+  width:44px;height:44px;border:1px solid rgba(164,123,103,.3);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:20px;font-size:18px;
+}
+.learn-title{font-size:16px;font-weight:700;color:var(--white);margin-bottom:10px;line-height:1.3}
+.learn-desc{font-size:13px;color:var(--text-muted);line-height:1.75}
+
+/* SPEAKER */
+.speaker-section{background:var(--dark)}
+.speaker-layout{
+  display:grid;grid-template-columns:1fr 1.4fr;
+  gap:80px;align-items:center;margin-top:56px;
+}
+.speaker-img-wrap{
+  border:1px solid var(--border);
+  background:var(--teal);
+  aspect-ratio:3/4;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.speaker-img-placeholder{
+  font-size:80px;opacity:.1;
+}
+.speaker-img-tag{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(1,13,20,.85);backdrop-filter:blur(8px);
+  padding:20px 24px;border-top:1px solid var(--border);
+}
+.speaker-img-name{font-size:16px;font-weight:700;letter-spacing:-.2px}
+.speaker-img-role{font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--bronze);margin-top:4px}
+.speaker-stats{
+  display:flex;gap:0;margin:32px 0;
+  border:1px solid var(--border);
+}
+.spstat{padding:20px 28px;text-align:center;border-right:1px solid var(--border);flex:1}
+.spstat:last-child{border-right:none}
+.spstat-val{font-size:26px;font-weight:700;color:var(--white);line-height:1;margin-bottom:4px}
+.spstat-label{font-size:9px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim)}
+.speaker-text{font-size:15px;color:var(--text-muted);line-height:1.85;margin-bottom:16px}
+.speaker-quote{
+  border-left:2px solid var(--bronze);
+  padding-left:24px;
+  font-size:14px;font-style:italic;color:rgba(255,255,255,.7);
+  line-height:1.7;margin-top:24px;
+}
+
+/* TESTIMONIALS */
+.testi-section{background:var(--teal)}
+.testi-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);
+  margin-top:56px;
+}
+.testi-card{background:var(--teal);padding:40px 32px;transition:background .3s}
+.testi-card:hover{background:var(--teal2)}
+.testi-stars{color:var(--gold);font-size:12px;letter-spacing:2px;margin-bottom:20px}
+.testi-text{
+  font-size:14px;color:rgba(255,255,255,.8);
+  line-height:1.8;font-style:italic;margin-bottom:24px;
+}
+.testi-author{display:flex;align-items:center;gap:14px}
+.testi-avatar{
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(164,123,103,.2);border:1px solid rgba(164,123,103,.3);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;font-weight:700;color:var(--bronze);
+}
+.testi-name{font-size:13px;font-weight:700;color:var(--white)}
+.testi-role{font-size:11px;color:var(--text-dim);margin-top:2px}
+
+/* PRICING */
+.pricing-section{background:var(--dark)}
+.pricing-layout{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:1px;background:var(--border);
+  border:1px solid var(--border);
+  margin-top:56px;
+}
+.price-card{background:var(--dark);padding:52px 48px;position:relative}
+.price-card.featured{
+  background:var(--teal);
+  border-left:3px solid var(--bronze);
+}
+.price-label{
+  font-size:9px;font-weight:700;letter-spacing:4px;text-transform:uppercase;
+  color:var(--text-dim);margin-bottom:16px;
+}
+.price-label.hot{color:var(--bronze)}
+.price-badge{
+  position:absolute;top:28px;right:28px;
+  background:var(--bronze);color:#fff;
+  font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  padding:6px 14px;
+}
+.price-name{font-size:22px;font-weight:700;color:var(--white);margin-bottom:8px}
+.price-deadline{font-size:11px;color:var(--text-muted);margin-bottom:32px}
+.price-amount{
+  font-size:52px;font-weight:800;color:var(--white);line-height:1;
+  letter-spacing:-2px;margin-bottom:4px;
+}
+.price-amount span{font-size:20px;font-weight:400;vertical-align:super;letter-spacing:0;margin-right:4px}
+.price-installment{font-size:12px;color:var(--text-dim);margin-bottom:32px}
+.price-features{
+  list-style:none;margin-bottom:40px;
+  display:flex;flex-direction:column;gap:14px;
+}
+.price-features li{
+  display:flex;align-items:flex-start;gap:12px;
+  font-size:13px;color:rgba(255,255,255,.75);line-height:1.5;
+}
+.price-features li::before{
+  content:'✓';color:var(--bronze);font-weight:700;
+  flex-shrink:0;margin-top:1px;
+}
+.btn-price{
+  display:block;text-align:center;
+  background:var(--bronze);color:#fff;
+  font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;
+  padding:16px 32px;letter-spacing:2.5px;text-transform:uppercase;
+  text-decoration:none;transition:all .3s;width:100%;
+}
+.btn-price:hover{background:var(--bronze2)}
+.btn-price.ghost{
+  background:transparent;border:1px solid var(--border);color:var(--text-muted);
+}
+.btn-price.ghost:hover{border-color:var(--bronze);color:var(--bronze);background:transparent}
+.price-guarantee{
+  text-align:center;margin-top:20px;
+  font-size:11px;color:var(--text-dim);letter-spacing:.5px;
+}
+
+/* FAQ */
+.faq-section{background:var(--teal)}
+.faq-list{margin-top:56px;border:1px solid var(--border)}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-item:last-child{border-bottom:none}
+.faq-q{
+  width:100%;text-align:left;
+  background:none;border:none;cursor:pointer;
+  padding:28px 32px;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  font-family:'Montserrat',sans-serif;font-size:14px;font-weight:600;
+  color:var(--white);transition:color .3s;
+}
+.faq-q:hover{color:var(--bronze2)}
+.faq-arrow{
+  font-size:18px;color:var(--bronze);transition:transform .3s;flex-shrink:0;
+}
+.faq-item.open .faq-arrow{transform:rotate(45deg)}
+.faq-a{
+  display:none;padding:0 32px 28px;
+  font-size:14px;color:var(--text-muted);line-height:1.85;
+}
+.faq-item.open .faq-a{display:block}
+
+/* FINAL CTA */
+.final-cta{
+  background:var(--teal);
+  text-align:center;padding:120px 64px;
+  position:relative;overflow:hidden;
+}
+.final-cta::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 50%,rgba(164,123,103,.08) 0%,transparent 70%);
+  pointer-events:none;
+}
+.final-cta-content{position:relative;z-index:2;max-width:680px;margin:0 auto}
+.final-verse{
+  font-size:13px;font-style:italic;color:var(--bronze2);
+  margin-bottom:40px;line-height:1.7;
+}
+.final-verse cite{display:block;margin-top:8px;font-style:normal;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim)}
+.final-h2{
+  font-size:clamp(32px,4vw,52px);
+  font-weight:700;line-height:1.1;
+  letter-spacing:-1px;margin-bottom:20px;
+}
+.final-h2 em{font-style:italic;font-weight:400;color:var(--bronze2)}
+.final-sub{font-size:15px;color:var(--text-muted);line-height:1.8;margin-bottom:48px}
+.final-price-strip{
+  display:inline-flex;align-items:baseline;gap:8px;
+  margin-bottom:40px;
+}
+.final-from{font-size:13px;color:var(--text-dim);letter-spacing:1px}
+.final-amount{font-size:48px;font-weight:800;color:var(--white);letter-spacing:-2px}
+.final-per{font-size:13px;color:var(--text-muted)}
+
+/* FOOTER */
+footer{
+  background:var(--dark);padding:40px 64px;
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+}
+.footer-logo{font-weight:700;font-size:13px;letter-spacing:3px;text-transform:uppercase}
+.footer-logo span{color:var(--bronze)}
+.footer-copy{font-size:11px;color:var(--text-dim);letter-spacing:.5px}
+
+/* MOBILE */
+@media(max-width:768px){
+  .nav{padding:0 24px}
+  section{padding:72px 24px}
+  .hero{padding:80px 24px 60px}
+  .hero-h1{letter-spacing:-1px}
+  .hero-info-strip{flex-direction:column}
+  .hinfo{border-right:none;border-bottom:1px solid var(--border)}
+  .hinfo:last-child{border-bottom:none}
+  .forwho-grid{grid-template-columns:1fr}
+  .learns-grid{grid-template-columns:1fr}
+  .testi-grid{grid-template-columns:1fr}
+  .pricing-layout{grid-template-columns:1fr}
+  .speaker-layout{grid-template-columns:1fr;gap:40px}
+  .agenda-item{grid-template-columns:80px 1fr}
+  footer{padding:32px 24px;flex-direction:column;text-align:center}
+  .final-cta{padding:72px 24px}
+  .countdown-bar{font-size:10px;padding:12px 16px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="logo">Legacy <span>Wisdom</span></div>
+  <a href="#inscricao" class="nav-cta">Garantir Vaga</a>
+</nav>
+
+<!-- COUNTDOWN BANNER -->
+<div class="countdown-bar">
+  <strong>EARLY BIRD</strong> — Inscrições com desconto até 15 de abril &nbsp;·&nbsp; Apenas <strong>100 vagas</strong> disponíveis
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-line-v"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Workshop Online — 9 de Maio de 2026
+    </div>
+    <div class="hero-date-tag">Sábado · 08h às 17h · Ao Vivo</div>
+    <h1 class="hero-h1">
+      Reino <span class="amp">&</span> <em>Riqueza</em>
+    </h1>
+    <p class="hero-sub">
+      O workshop para o empresário cristão que quer alinhar sua vida financeira com os <strong>princípios do Reino</strong> — e finalmente prosperar sem abrir mão da fé.
+    </p>
+    <p class="hero-promise">
+      "Um dia que pode mudar os próximos 10 anos da sua vida."
+    </p>
+    <div class="hero-actions">
+      <a href="#inscricao" class="btn-primary">
+        Garantir Minha Vaga
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#agenda" class="btn-secondary">
+        Ver programação
+        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+      </a>
+    </div>
+    <div class="hero-info-strip">
+      <div class="hinfo">
+        <span class="hinfo-icon">📅</span>
+        <div>
+          <div class="hinfo-label">Data</div>
+          <div class="hinfo-val">9 de Maio</div>
+        </div>
+      </div>
+      <div class="hinfo">
+        <span class="hinfo-icon">🕗</span>
+        <div>
+          <div class="hinfo-label">Horário</div>
+          <div class="hinfo-val">08h – 17h</div>
+        </div>
+      </div>
+      <div class="hinfo">
+        <span class="hinfo-icon">💻</span>
+        <div>
+          <div class="hinfo-label">Formato</div>
+          <div class="hinfo-val">100% Online</div>
+        </div>
+      </div>
+      <div class="hinfo">
+        <span class="hinfo-icon">🎟</span>
+        <div>
+          <div class="hinfo-label">Vagas</div>
+          <div class="hinfo-val">Limitadas</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FOR WHOM -->
+<section class="forwho">
+  <div class="container">
+    <div class="eyebrow">Para Quem É</div>
+    <h2 class="section-h2">Este workshop foi feito <em>para você</em></h2>
+    <p class="section-sub">Se você se identifica com pelo menos 3 destes perfis, sua vaga é aqui.</p>
+    <div class="forwho-grid">
+      <div class="fw-card">
+        <div class="fw-dot"></div>
+        <div class="fw-text">
+          <strong>Empresário ou empreendedor cristão</strong>
+          Você tem um negócio, mas sente que falta uma fundação espiritual sólida para tomar decisões financeiras com confiança.
+        </div>
+      </div>
+      <div class="fw-card">
+        <div class="fw-dot"></div>
+        <div class="fw-text">
+          <strong>Líder ou pastor com visão de impacto</strong>
+          Você lidera pessoas, prega a prosperidade bíblica, mas ainda não aplicou esses princípios com profundidade na sua própria vida financeira.
+        </div>
+      </div>
+      <div class="fw-card">
+        <div class="fw-dot"></div>
+        <div class="fw-text">
+          <strong>Profissional em transição de carreira</strong>
+          Você sente o chamado para empreender, mas tem medo. Quer entender como a fé e a estratégia caminham juntas antes de dar o salto.
+        </div>
+      </div>
+      <div class="fw-card">
+        <div class="fw-dot"></div>
+        <div class="fw-text">
+          <strong>Cristão que quer sair do ciclo de escassez</strong>
+          Você ora, diezima, serve — mas ainda luta financeiramente e não entende por quê. Chegou a hora de mudar isso com princípios bíblicos aplicados.
+        </div>
+      </div>
+      <div class="fw-card">
+        <div class="fw-dot"></div>
+        <div class="fw-text">
+          <strong>Investidor ou profissional do mercado financeiro</strong>
+          Você já tem conhecimento financeiro, mas quer integrar a visão bíblica de riqueza e propósito com sua estratégia de vida.
+        </div>
+      </div>
+      <div class="fw-card">
+        <div class="fw-dot"></div>
+        <div class="fw-text">
+          <strong>Quem busca comunidade de alto nível</strong>
+          Você quer se cercar de pessoas que pensam grande, têm fé real e estão dispostas a crescer juntas. Networking que transforma.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- WHAT YOU LEARN -->
+<section class="learns-section">
+  <div class="container">
+    <div class="eyebrow">O Que Você Vai Aprender</div>
+    <h2 class="section-h2">6 blocos de conteúdo <em>que transformam</em></h2>
+    <p class="section-sub">Cada bloco foi estruturado para você sair com clareza, ferramentas e um plano de ação concreto.</p>
+    <div class="learns-grid">
+      <div class="learn-card">
+        <div class="learn-num">Bloco 01</div>
+        <div class="learn-icon">👑</div>
+        <div class="learn-title">A Mentalidade do Herdeiro do Reino</div>
+        <div class="learn-desc">Por que a maioria dos cristãos ainda pensa como empregado de Deus e não como filho. Como a identidade muda tudo antes do dinheiro.</div>
+      </div>
+      <div class="learn-card">
+        <div class="learn-num">Bloco 02</div>
+        <div class="learn-icon">📖</div>
+        <div class="learn-title">Os Princípios Bíblicos da Prosperidade Real</div>
+        <div class="learn-desc">O que a Bíblia realmente diz sobre riqueza — sem teologia da prosperidade distorcida e sem pobreza religiosa. A verdade que liberta.</div>
+      </div>
+      <div class="learn-card">
+        <div class="learn-num">Bloco 03</div>
+        <div class="learn-icon">🏛</div>
+        <div class="learn-title">Economia do Reino na Prática</div>
+        <div class="learn-desc">Como estruturar suas finanças pessoais e empresariais com base nos princípios que Deus ensinou a Israel. Dízimo, oferta, investimento e multiplicação.</div>
+      </div>
+      <div class="learn-card">
+        <div class="learn-num">Bloco 04</div>
+        <div class="learn-icon">🎯</div>
+        <div class="learn-title">Propósito x Lucro — Não É Escolha</div>
+        <div class="learn-desc">Como alinhar o chamado de Deus na sua vida com uma estratégia de negócios que gera resultado. Você não precisa escolher entre servir e prosperar.</div>
+      </div>
+      <div class="learn-card">
+        <div class="learn-num">Bloco 05</div>
+        <div class="learn-icon">🗺</div>
+        <div class="learn-title">Seu Plano de Autoridade Financeira</div>
+        <div class="learn-desc">Um framework prático para você sair do workshop com um plano de 90 dias claro, aplicável e biblicamente fundamentado para sua vida e negócio.</div>
+      </div>
+      <div class="learn-card">
+        <div class="learn-num">Bloco 06</div>
+        <div class="learn-icon">🤝</div>
+        <div class="learn-title">Networking + Oportunidade de Aceleração</div>
+        <div class="learn-desc">Conexão com outros empresários e líderes cristãos de alto nível. E para quem quiser dar o próximo passo: apresentação do programa MasterMind.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- AGENDA -->
+<section class="agenda-section" id="agenda">
+  <div class="container">
+    <div class="eyebrow">Programação</div>
+    <h2 class="section-h2">Um sábado que vale <em>um ano de crescimento</em></h2>
+    <p class="section-sub">9 de Maio de 2026 — Online, ao vivo, das 8h às 17h.</p>
+    <div class="agenda-grid">
+      <div class="agenda-item">
+        <div class="agenda-time">08:00</div>
+        <div class="agenda-content">
+          <div class="agenda-title">Abertura e Momento de Adoração</div>
+          <div class="agenda-desc">Começamos o dia no lugar certo — na presença de Deus. Alinhamento espiritual antes de qualquer estratégia.</div>
+          <span class="agenda-tag">Abertura</span>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">08:45</div>
+        <div class="agenda-content">
+          <div class="agenda-title">Bloco 1 — A Mentalidade do Herdeiro</div>
+          <div class="agenda-desc">Identidade, propósito e a base espiritual que precede qualquer transformação financeira.</div>
+          <span class="agenda-tag">Ensino</span>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">10:00</div>
+        <div class="agenda-content">
+          <div class="agenda-title">Bloco 2 — Princípios Bíblicos da Prosperidade</div>
+          <div class="agenda-desc">Estudo profundo das escrituras sobre riqueza, trabalho, investimento e multiplicação. Sem distorções, sem religiosidade vazia.</div>
+          <span class="agenda-tag">Ensino + Aplicação</span>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">11:15</div>
+        <div class="agenda-content">
+          <div class="agenda-title">Intervalo</div>
+          <div class="agenda-desc">Pausa de 30 minutos. Momento para reflexão, café e interação no chat.</div>
+          <span class="agenda-tag">Pausa</span>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">11:45</div>
+        <div class="agenda-content">
+          <div class="agenda-title">Bloco 3 — Economia do Reino na Prática</div>
+          <div class="agenda-desc">Estrutura financeira bíblica aplicada ao seu negócio e vida pessoal. Framework prático de organização e multiplicação.</div>
+          <span class="agenda-tag">Prático</span>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">13:00</div>
+        <div class="agenda-content">
+          <div class="agenda-title">Almoço</div>
+          <div class="agenda-desc">Pausa de 1h30. Aproveitamos para você descansar, comer bem e integrar o que aprendeu no período da manhã.</div>
+          <span class="agenda-tag">Pausa</span>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">14:30</div>
+        <div class="agenda-content">
+          <div class="agenda-title">Bloco 4 + 5 — Propósito, Lucro e seu Plano de 90 Dias</div>
+          <div class="agenda-desc">Como alinhar chamado e estratégia. Construção guiada do seu plano pessoal de autoridade financeira para os próximos 90 dias.</div>
+          <span class="agenda-tag">Workshop Prático</span>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">16:00</div>
+        <div class="agenda-content">
+          <div class="agenda-title">Bloco 6 — Networking e Próximos Passos</div>
+          <div class="agenda-desc">Sessão de perguntas ao vivo, conexão com a comunidade e apresentação do MasterMind Legacy Wisdom para quem quiser ir mais fundo.</div>
+          <span class="agenda-tag">Comunidade</span>
+        </div>
+      </div>
+      <div class="agenda-item">
+        <div class="agenda-time">17:00</div>
+        <div class="agenda-content">
+          <div class="agenda-title">Encerramento e Oração Final</div>
+          <div class="agenda-desc">Fechamos o dia como abrimos — em oração. Compromisso e envio para a semana que começa.</div>
+          <span class="agenda-tag">Encerramento</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SPEAKER -->
+<section class="speaker-section">
+  <div class="container">
+    <div class="speaker-layout">
+      <div class="speaker-img-wrap">
+        <span class="speaker-img-placeholder">📸</span>
+        <div class="speaker-img-tag">
+          <div class="speaker-img-name">Júnior Ventura</div>
+          <div class="speaker-img-role">Fundador · Legacy Wisdom</div>
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow">O Instrutor</div>
+        <h2 class="section-h2">Júnior Ventura — <em>5 anos formando líderes</em></h2>
+        <div class="speaker-stats">
+          <div class="spstat">
+            <div class="spstat-val">80k+</div>
+            <div class="spstat-label">Seguidores</div>
+          </div>
+          <div class="spstat">
+            <div class="spstat-val">5+</div>
+            <div class="spstat-label">Anos de Mentoria</div>
+          </div>
+          <div class="spstat">
+            <div class="spstat-val">100+</div>
+            <div class="spstat-label">Vidas Transformadas</div>
+          </div>
+        </div>
+        <p class="speaker-text">Júnior Ventura é pastor, palestrante, empreendedor e fundador do programa Legacy Wisdom — uma metodologia de formação de líderes cristãos que integra fé, propósito e estratégia financeira.</p>
+        <p class="speaker-text">Ao longo de mais de 5 anos de mentoria, Junior desenvolveu um sistema único de ensino que une os princípios bíblicos de prosperidade com ferramentas práticas de negócios — formando empresários, pastores e líderes em todo o Brasil.</p>
+        <p class="speaker-text">Pregador reconhecido, já ministrou em dezenas de eventos, igrejas e conferências. Sua missão: <strong style="color:var(--white)">levantar uma geração de líderes que prosperam sem perder a essência.</strong></p>
+        <div class="speaker-quote">
+          "Deus não chama você para ser bem-sucedido pelo mundo. Ele te chama para ser frutífero para o Reino. E quando você entende a diferença — tudo muda."
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- TESTIMONIALS -->
+<section class="testi-section">
+  <div class="container">
+    <div class="eyebrow">Transformações Reais</div>
+    <h2 class="section-h2">O que dizem quem <em>já passou por Júnior</em></h2>
+    <p class="section-sub">Depoimentos de alunos da mentoria Legacy Wisdom.</p>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Antes eu tinha medo de falar de dinheiro na igreja. Depois da mentoria com o Júnior, entendi que prosperidade e fé não são opostos — são aliados. Meu negócio cresceu 3x em 6 meses."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">R</div>
+          <div>
+            <div class="testi-name">Ricardo M.</div>
+            <div class="testi-role">Empresário · Minas Gerais</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"O Júnior tem uma forma de ensinar que conecta o espiritual com o prático de um jeito que eu nunca tinha visto antes. Saí da mentoria com um plano claro e com paz na alma."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">A</div>
+          <div>
+            <div class="testi-name">Ana Paula S.</div>
+            <div class="testi-role">Pastora e Empreendedora · São Paulo</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Passei anos lendo livros de finanças, mas algo sempre faltava. Com os princípios bíblicos que o Júnior ensina, tudo encaixou. Hoje tenho autoridade para falar de dinheiro com minha família e minha equipe."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">D</div>
+          <div>
+            <div class="testi-name">Daniel F.</div>
+            <div class="testi-role">Líder Empresarial · Paraná</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PRICING -->
+<section class="pricing-section" id="inscricao">
+  <div class="container">
+    <div class="eyebrow">Sua Inscrição</div>
+    <h2 class="section-h2">Garanta sua vaga no <em>Reino & Riqueza</em></h2>
+    <p class="section-sub">Apenas 100 vagas disponíveis. Early Bird encerra em 15 de abril.</p>
+    <div class="pricing-layout">
+
+      <div class="price-card">
+        <div class="price-label">Inscrição Padrão</div>
+        <div class="price-name">Após 15 de Abril</div>
+        <div class="price-deadline">Disponível até 5 de Maio de 2026</div>
+        <div class="price-amount"><span>R$</span>1.497</div>
+        <div class="price-installment">ou 12x de R$ 139,90</div>
+        <ul class="price-features">
+          <li>Acesso ao vivo em 9 de Maio (8h–17h)</li>
+          <li>Gravação completa do workshop (30 dias)</li>
+          <li>Material de apoio em PDF</li>
+          <li>Acesso ao grupo exclusivo de alunos</li>
+          <li>Certificado de participação digital</li>
+        </ul>
+        <a href="https://calendly.com/legacywisdom7/30min" target="_blank" class="btn-price ghost">Inscrever-se</a>
+      </div>
+
+      <div class="price-card featured">
+        <div class="price-badge">Early Bird</div>
+        <div class="price-label hot">Melhor Escolha</div>
+        <div class="price-name">Até 15 de Abril</div>
+        <div class="price-deadline">Economize R$ 500 — vagas limitadas</div>
+        <div class="price-amount"><span>R$</span>997</div>
+        <div class="price-installment">ou 12x de R$ 97,90</div>
+        <ul class="price-features">
+          <li>Acesso ao vivo em 9 de Maio (8h–17h)</li>
+          <li>Gravação completa do workshop (60 dias)</li>
+          <li>Material de apoio em PDF + workbook imprimível</li>
+          <li>Acesso ao grupo exclusivo de alunos</li>
+          <li>Certificado de participação digital</li>
+          <li><strong style="color:var(--bronze2)">Bônus: Sessão de perguntas exclusiva com Júnior (30min)</strong></li>
+          <li><strong style="color:var(--bronze2)">Bônus: Devocional do Empresário — 7 dias em PDF</strong></li>
+        </ul>
+        <a href="https://calendly.com/legacywisdom7/30min" target="_blank" class="btn-price">Garantir Early Bird</a>
+        <div class="price-guarantee">🔒 Acesso garantido imediatamente após o pagamento</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="container">
+    <div class="eyebrow">Dúvidas Frequentes</div>
+    <h2 class="section-h2">Respondendo suas <em>principais perguntas</em></h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          O workshop é ao vivo ou gravado?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">O workshop acontece ao vivo no dia 9 de maio, das 8h às 17h. Você participa em tempo real, com interação no chat e sessão de perguntas ao final. A gravação fica disponível por 30 ou 60 dias dependendo do seu plano de inscrição.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Preciso ter experiência em negócios para participar?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">Não. O workshop foi desenhado tanto para quem já tem um negócio rodando quanto para quem está começando ou ainda em emprego formal. O que importa é a disposição de crescer e a vontade de integrar fé com estratégia financeira.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Em qual plataforma acontece o evento?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">O link de acesso será enviado por e-mail após a confirmação da inscrição. O evento acontece em plataforma de transmissão online — compatível com computador, tablet e celular.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          E se eu não puder assistir ao vivo no dia?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">Recomendamos fortemente a participação ao vivo — a interação, as perguntas em tempo real e a energia do evento fazem diferença. Mas se não puder, a gravação fica disponível por 30 ou 60 dias conforme seu plano.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          Tem garantia de reembolso?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">Sim. Se por qualquer motivo você não ficar satisfeito, oferecemos garantia de 7 dias após o evento. Entre em contato e devolveremos 100% do valor pago, sem perguntas.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">
+          O que é o MasterMind que será apresentado no workshop?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">O MasterMind Legacy Wisdom é o programa anual de formação de alto nível do Júnior Ventura — 52 semanas de ensino profundo, mentoria em grupo e aceleração espiritual e financeira. No workshop, quem quiser conhecer mais terá essa oportunidade. Não é obrigatório e não há pressão de nenhum tipo.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <div class="final-cta-content">
+    <p class="final-verse">
+      "Mas lembrai-vos do Senhor vosso Deus, porque é ele que vos dá força para adquirirdes riqueza, a fim de confirmar a sua aliança."
+      <cite>— Deuteronômio 8:18</cite>
+    </p>
+    <h2 class="final-h2">Sua hora de prosperar <em>com propósito</em></h2>
+    <p class="final-sub">Um sábado pode mudar os próximos 10 anos da sua vida. Não porque é um evento — mas porque é um encontro com verdades que libertam.</p>
+    <div class="final-price-strip">
+      <span class="final-from">A partir de</span>
+      <span class="final-amount">R$ 997</span>
+      <span class="final-per">— Early Bird</span>
+    </div>
+    <br/><br/>
+    <a href="https://calendly.com/legacywisdom7/30min" target="_blank" class="btn-primary" style="display:inline-flex;margin:0 auto">
+      Garantir Minha Vaga Agora
+      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <p style="font-size:11px;color:var(--text-dim);margin-top:20px;letter-spacing:.5px">100 vagas · Early Bird até 15 de Abril · Garantia de 7 dias</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Legacy <span>Wisdom</span></div>
+  <div class="footer-copy">© 2026 Legacy Wisdom — Júnior Ventura. Todos os direitos reservados.</div>
+</footer>
+
+<script>
+// Nav scroll
+window.addEventListener('scroll',()=>{
+  document.getElementById('nav').classList.toggle('scrolled',window.scrollY>40)
+})
+
+// FAQ toggle
+function toggleFaq(btn){
+  const item=btn.closest('.faq-item')
+  const isOpen=item.classList.contains('open')
+  document.querySelectorAll('.faq-item.open').forEach(i=>i.classList.remove('open'))
+  if(!isOpen) item.classList.add('open')
+}
+</script>
+</body>
+</html>
