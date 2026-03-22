@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Inscrição — Workshop Reino & Riqueza</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --dark:#010d14;
+  --teal:#022931;
+  --teal2:#03353f;
+  --bronze:#a47b67;
+  --bronze2:#c4977f;
+  --white:#ffffff;
+  --border:rgba(255,255,255,.08);
+  --text-muted:rgba(255,255,255,.55);
+  --text-dim:rgba(255,255,255,.35);
+  --green:#2d7a4f;
+  --red:#c0392b;
+}
+html{scroll-behavior:smooth}
+body{background:var(--dark);color:var(--white);font-family:'Montserrat',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased}
+
+.header{
+  background:var(--teal);border-bottom:1px solid var(--border);
+  padding:20px 40px;display:flex;align-items:center;justify-content:space-between;
+}
+.logo{font-weight:700;font-size:14px;letter-spacing:3px;text-transform:uppercase}
+.logo span{color:var(--bronze)}
+.header-badge{font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--bronze2)}
+
+.main{max-width:1000px;margin:0 auto;padding:60px 24px;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start}
+
+/* LEFT — RESUMO */
+.summary{position:sticky;top:40px}
+.summary-tag{font-size:10px;font-weight:700;letter-spacing:5px;text-transform:uppercase;color:var(--bronze);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.summary-tag::before{content:'';width:20px;height:1px;background:var(--bronze)}
+.summary-title{font-size:28px;font-weight:800;line-height:1.1;letter-spacing:-1px;margin-bottom:8px}
+.summary-title em{font-style:italic;font-weight:400;color:var(--bronze2)}
+.summary-date{font-size:12px;color:var(--text-muted);margin-bottom:32px;letter-spacing:1px}
+.summary-box{border:1px solid var(--border);background:var(--teal);margin-bottom:16px}
+.summary-plan{padding:24px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .2s;display:flex;align-items:flex-start;gap:16px}
+.summary-plan:last-child{border-bottom:none}
+.summary-plan:hover{background:var(--teal2)}
+.summary-plan.selected{background:rgba(164,123,103,.1);border-left:3px solid var(--bronze)}
+.plan-radio{width:18px;height:18px;border:2px solid var(--border);border-radius:50%;flex-shrink:0;margin-top:2px;transition:all .2s;position:relative}
+.summary-plan.selected .plan-radio{border-color:var(--bronze);background:var(--bronze)}
+.summary-plan.selected .plan-radio::after{content:'';position:absolute;inset:3px;background:#fff;border-radius:50%}
+.plan-info{flex:1}
+.plan-name{font-size:13px;font-weight:700;color:var(--white);margin-bottom:4px}
+.plan-desc{font-size:11px;color:var(--text-muted);line-height:1.5}
+.plan-price{font-size:18px;font-weight:800;color:var(--white);white-space:nowrap}
+.plan-price small{font-size:10px;font-weight:400;display:block;color:var(--text-dim);letter-spacing:.5px}
+.summary-includes{padding:20px;background:rgba(1,13,20,.4)}
+.inc-title{font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--text-dim);margin-bottom:12px}
+.inc-item{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:var(--text-muted);line-height:1.5;margin-bottom:8px}
+.inc-item::before{content:'✓';color:var(--bronze);font-weight:700;flex-shrink:0}
+.guarantee{margin-top:16px;padding:16px;border:1px solid rgba(164,123,103,.2);display:flex;align-items:center;gap:12px;font-size:11px;color:var(--text-muted)}
+.guarantee-icon{font-size:20px;flex-shrink:0}
+
+/* RIGHT — FORM */
+.form-wrap{}
+.form-section-title{font-size:10px;font-weight:700;letter-spacing:5px;text-transform:uppercase;color:var(--bronze);margin-bottom:20px;display:flex;align-items:center;gap:10px}
+.form-section-title::before{content:'';width:20px;height:1px;background:var(--bronze)}
+
+.form-group{margin-bottom:20px}
+label{display:block;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px}
+input{
+  width:100%;background:var(--teal);border:1px solid var(--border);
+  color:var(--white);font-family:'Montserrat',sans-serif;font-size:14px;font-weight:400;
+  padding:14px 18px;outline:none;transition:border-color .2s;
+  -webkit-appearance:none;border-radius:0;
+}
+input:focus{border-color:var(--bronze)}
+input::placeholder{color:var(--text-dim)}
+input.error{border-color:var(--red)}
+
+.error-msg{font-size:11px;color:#e74c3c;margin-top:6px;display:none}
+.error-msg.show{display:block}
+
+.divider-form{height:1px;background:var(--border);margin:28px 0}
+
+.btn-submit{
+  width:100%;background:var(--bronze);color:#fff;
+  font-family:'Montserrat',sans-serif;font-size:12px;font-weight:700;
+  padding:18px;letter-spacing:2.5px;text-transform:uppercase;
+  border:none;cursor:pointer;transition:all .3s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+}
+.btn-submit:hover:not(:disabled){background:var(--bronze2)}
+.btn-submit:disabled{opacity:.6;cursor:not-allowed}
+.btn-submit .spinner{
+  width:16px;height:16px;border:2px solid rgba(255,255,255,.3);
+  border-top-color:#fff;border-radius:50%;
+  animation:spin .7s linear infinite;display:none;
+}
+.btn-submit.loading .spinner{display:block}
+.btn-submit.loading .btn-text{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.secure-badge{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:14px;font-size:11px;color:var(--text-dim);
+}
+
+.total-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px;border:1px solid var(--border);background:var(--teal);
+  margin-bottom:20px;
+}
+.total-label{font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-muted)}
+.total-value{font-size:24px;font-weight:800;color:var(--white);letter-spacing:-1px}
+.total-install{font-size:10px;color:var(--text-dim);text-align:right;margin-top:2px}
+
+.alert{padding:14px 18px;margin-bottom:20px;font-size:13px;line-height:1.5;display:none}
+.alert.show{display:block}
+.alert.error{background:rgba(192,57,43,.15);border:1px solid rgba(192,57,43,.4);color:#e74c3c}
+.alert.success{background:rgba(45,122,79,.15);border:1px solid rgba(45,122,79,.4);color:#2ecc71}
+
+@media(max-width:768px){
+  .main{grid-template-columns:1fr;gap:32px}
+  .summary{position:static}
+  .header{padding:16px 20px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">Legacy <span>Wisdom</span></div>
+  <div class="header-badge">Workshop · Reino & Riqueza</div>
+</div>
+
+<div class="main">
+
+  <!-- ESQUERDA: RESUMO -->
+  <div class="summary">
+    <div class="summary-tag">Sua inscrição</div>
+    <h1 class="summary-title">Reino <em>&</em> Riqueza</h1>
+    <div class="summary-date">📅 Sábado, 9 de Maio de 2026 &nbsp;·&nbsp; 08h às 17h &nbsp;·&nbsp; Online</div>
+
+    <div class="summary-box">
+      <div class="summary-plan selected" id="plan-early" onclick="selectPlan('early')">
+        <div class="plan-radio"></div>
+        <div class="plan-info">
+          <div class="plan-name">Early Bird <span style="background:var(--bronze);color:#fff;font-size:9px;padding:2px 8px;letter-spacing:1px;margin-left:6px">RECOMENDADO</span></div>
+          <div class="plan-desc">Até 15 de Abril — Economize R$ 500<br>+ 2 bônus exclusivos</div>
+        </div>
+        <div style="text-align:right">
+          <div class="plan-price">R$ 997<small>ou 12x de R$ 97,90</small></div>
+        </div>
+      </div>
+      <div class="summary-plan" id="plan-regular" onclick="selectPlan('regular')">
+        <div class="plan-radio"></div>
+        <div class="plan-info">
+          <div class="plan-name">Inscrição Regular</div>
+          <div class="plan-desc">Após 15 de Abril</div>
+        </div>
+        <div style="text-align:right">
+          <div class="plan-price">R$ 1.497<small>ou 12x de R$ 139,90</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-includes">
+      <div class="inc-title">O que está incluído</div>
+      <div class="inc-item">Acesso ao vivo — 9 de Maio (8h às 17h)</div>
+      <div class="inc-item">Gravação completa por 60 dias</div>
+      <div class="inc-item">Material de apoio + workbook em PDF</div>
+      <div class="inc-item">Grupo exclusivo de alunos</div>
+      <div class="inc-item">Certificado digital de participação</div>
+      <div class="inc-item" id="bonus-item">Sessão de perguntas exclusiva (30min) + Devocional do Empresário</div>
+    </div>
+
+    <div class="guarantee">
+      <div class="guarantee-icon">🔒</div>
+      <div>Garantia de 7 dias. Se não ficar satisfeito, devolvemos 100% do valor — sem perguntas.</div>
+    </div>
+  </div>
+
+  <!-- DIREITA: FORMULÁRIO -->
+  <div class="form-wrap">
+    <div class="form-section-title">Seus dados</div>
+
+    <div class="alert" id="alert"></div>
+
+    <form id="checkoutForm" novalidate>
+      <div class="form-group">
+        <label for="name">Nome completo</label>
+        <input type="text" id="name" placeholder="Seu nome completo" autocomplete="name"/>
+        <div class="error-msg" id="name-error">Por favor, insira seu nome completo.</div>
+      </div>
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" placeholder="seu@email.com" autocomplete="email"/>
+        <div class="error-msg" id="email-error">Por favor, insira um e-mail válido.</div>
+      </div>
+      <div class="form-group">
+        <label for="phone">WhatsApp (com DDD)</label>
+        <input type="tel" id="phone" placeholder="(11) 99999-9999" autocomplete="tel"/>
+        <div class="error-msg" id="phone-error">Por favor, insira seu WhatsApp.</div>
+      </div>
+
+      <div class="divider-form"></div>
+      <div class="form-section-title">Pagamento</div>
+
+      <div class="total-row">
+        <div>
+          <div class="total-label">Total</div>
+        </div>
+        <div>
+          <div class="total-value" id="total-display">R$ 997</div>
+          <div class="total-install" id="install-display">ou 12x de R$ 97,90</div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" id="submitBtn">
+        <span class="btn-text">Ir para o Pagamento</span>
+        <div class="spinner"></div>
+      </button>
+
+      <div class="secure-badge">
+        🔒 Pagamento 100% seguro via Mercado Pago
+      </div>
+    </form>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script>
+const SUPABASE_URL = 'https://gersysfqbtvfdbzzqzcw.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlcnN5c2ZxYnR2ZmRienpxemN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMDk4ODIsImV4cCI6MjA4OTY4NTg4Mn0.PULGMEpPHk0-PjS-VgQVJbKHjiVYnmHea2Yti0ah_nU';
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let selectedPlan = 'early';
+const plans = {
+  early: { price: 997, label: 'R$ 997', install: 'ou 12x de R$ 97,90', name: 'Workshop Reino & Riqueza — Early Bird' },
+  regular: { price: 1497, label: 'R$ 1.497', install: 'ou 12x de R$ 139,90', name: 'Workshop Reino & Riqueza — Regular' }
+};
+
+function selectPlan(plan) {
+  selectedPlan = plan;
+  document.querySelectorAll('.summary-plan').forEach(el => el.classList.remove('selected'));
+  document.getElementById('plan-' + plan).classList.add('selected');
+  document.getElementById('total-display').textContent = plans[plan].label;
+  document.getElementById('install-display').textContent = plans[plan].install;
+  document.getElementById('bonus-item').style.display = plan === 'early' ? 'flex' : 'none';
+}
+
+function showAlert(msg, type) {
+  const el = document.getElementById('alert');
+  el.textContent = msg;
+  el.className = 'alert show ' + type;
+}
+
+function validate() {
+  let ok = true;
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+
+  document.querySelectorAll('input').forEach(i => i.classList.remove('error'));
+  document.querySelectorAll('.error-msg').forEach(e => e.classList.remove('show'));
+
+  if (name.length < 3) {
+    document.getElementById('name').classList.add('error');
+    document.getElementById('name-error').classList.add('show');
+    ok = false;
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    document.getElementById('email').classList.add('error');
+    document.getElementById('email-error').classList.add('show');
+    ok = false;
+  }
+  if (phone.replace(/\D/g,'').length < 10) {
+    document.getElementById('phone').classList.add('error');
+    document.getElementById('phone-error').classList.add('show');
+    ok = false;
+  }
+  return ok;
+}
+
+document.getElementById('phone').addEventListener('input', function(){
+  let v = this.value.replace(/\D/g,'');
+  if (v.length <= 11) {
+    v = v.replace(/^(\d{2})(\d)/,'($1) $2');
+    v = v.replace(/(\d{5})(\d{4})$/,'$1-$2');
+  }
+  this.value = v;
+});
+
+document.getElementById('checkoutForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  if (!validate()) return;
+
+  const btn = document.getElementById('submitBtn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const phone = document.getElementById('phone').value.trim();
+  const plan = plans[selectedPlan];
+
+  try {
+    // 1. Salvar lead no Supabase
+    await supabase.from('workshop_registrations').insert({
+      name, email, phone,
+      plan: selectedPlan,
+      amount: plan.price,
+      status: 'pending'
+    });
+
+    // 2. Criar preferência no Mercado Pago via Edge Function
+    const { data, error } = await supabase.functions.invoke('create-workshop-preference', {
+      body: { name, email, phone, plan: selectedPlan, amount: plan.price, productName: plan.name }
+    });
+
+    if (error || !data?.init_point) throw new Error('Erro ao criar preferência de pagamento.');
+
+    // 3. Redirecionar para o checkout do Mercado Pago
+    window.location.href = data.init_point;
+
+  } catch (err) {
+    console.error(err);
+    showAlert('Ocorreu um erro. Por favor, tente novamente ou entre em contato pelo WhatsApp.', 'error');
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>
