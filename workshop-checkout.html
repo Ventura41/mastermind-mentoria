@@ -229,11 +229,8 @@ input.error{border-color:var(--red)}
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script>
-const SUPABASE_URL = 'https://gersysfqbtvfdbzzqzcw.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdlcnN5c2ZxYnR2ZmRienpxemN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxMDk4ODIsImV4cCI6MjA4OTY4NTg4Mn0.PULGMEpPHk0-PjS-VgQVJbKHjiVYnmHea2Yti0ah_nU';
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const EDGE_FUNCTION_URL = 'https://gersysfqbtvfdbzzqzcw.supabase.co/functions/v1/create-workshop-preference';
 
 let selectedPlan = 'early';
 const plans = {
@@ -306,27 +303,23 @@ document.getElementById('checkoutForm').addEventListener('submit', async functio
   const plan = plans[selectedPlan];
 
   try {
-    // 1. Salvar lead no Supabase
-    await supabase.from('workshop_registrations').insert({
-      name, email, phone,
-      plan: selectedPlan,
-      amount: plan.price,
-      status: 'pending'
+    const resp = await fetch(EDGE_FUNCTION_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, phone, plan: selectedPlan, amount: plan.price, productName: plan.name })
     });
 
-    // 2. Criar preferência no Mercado Pago via Edge Function
-    const { data, error } = await supabase.functions.invoke('create-workshop-preference', {
-      body: { name, email, phone, plan: selectedPlan, amount: plan.price, productName: plan.name }
-    });
+    const data = await resp.json();
 
-    if (error || !data?.init_point) throw new Error('Erro ao criar preferência de pagamento.');
+    if (!resp.ok || !data.init_point) {
+      throw new Error(data.error || 'Erro ao processar pagamento.');
+    }
 
-    // 3. Redirecionar para o checkout do Mercado Pago
     window.location.href = data.init_point;
 
   } catch (err) {
     console.error(err);
-    showAlert('Ocorreu um erro. Por favor, tente novamente ou entre em contato pelo WhatsApp.', 'error');
+    showAlert('Ocorreu um erro: ' + err.message + '. Tente novamente.', 'error');
     btn.classList.remove('loading');
     btn.disabled = false;
   }
