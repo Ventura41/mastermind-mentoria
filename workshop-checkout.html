@@ -145,8 +145,18 @@ input.error{border-color:var(--red)}
       <div class="summary-plan selected" id="plan-early" onclick="selectPlan('early')">
         <div class="plan-radio"></div>
         <div class="plan-info">
-          <div class="plan-name">Acesso Antecipado <span style="background:var(--bronze);color:#fff;font-size:9px;padding:2px 8px;letter-spacing:1px;margin-left:6px">RECOMENDADO</span></div>
-          <div class="plan-desc">Até 15 de Abril — Economize R$ 500<br>+ 2 bônus exclusivos</div>
+          <div class="plan-name">1º Lote <span style="background:var(--bronze);color:#fff;font-size:9px;padding:2px 8px;letter-spacing:1px;margin-left:6px">MELHOR PREÇO</span></div>
+          <div class="plan-desc">Vagas limitadas — Economize R$ 1.000<br>+ 2 bônus exclusivos</div>
+        </div>
+        <div style="text-align:right">
+          <div class="plan-price">R$ 497<small>ou 12x de R$ 48,90</small></div>
+        </div>
+      </div>
+      <div class="summary-plan" id="plan-second" onclick="selectPlan('second')">
+        <div class="plan-radio"></div>
+        <div class="plan-info">
+          <div class="plan-name">2º Lote</div>
+          <div class="plan-desc">Após encerrar o 1º Lote</div>
         </div>
         <div style="text-align:right">
           <div class="plan-price">R$ 997<small>ou 12x de R$ 97,90</small></div>
@@ -155,8 +165,8 @@ input.error{border-color:var(--red)}
       <div class="summary-plan" id="plan-regular" onclick="selectPlan('regular')">
         <div class="plan-radio"></div>
         <div class="plan-info">
-          <div class="plan-name">Inscrição Regular</div>
-          <div class="plan-desc">Após 15 de Abril</div>
+          <div class="plan-name">3º Lote</div>
+          <div class="plan-desc">Últimas vagas</div>
         </div>
         <div style="text-align:right">
           <div class="plan-price">R$ 1.497<small>ou 12x de R$ 139,90</small></div>
@@ -211,8 +221,8 @@ input.error{border-color:var(--red)}
           <div class="total-label">Total</div>
         </div>
         <div>
-          <div class="total-value" id="total-display">R$ 997</div>
-          <div class="total-install" id="install-display">ou 12x de R$ 97,90</div>
+          <div class="total-value" id="total-display">R$ 497</div>
+          <div class="total-install" id="install-display">ou 12x de R$ 48,90</div>
         </div>
       </div>
 
@@ -234,8 +244,9 @@ const EDGE_FUNCTION_URL = 'https://gersysfqbtvfdbzzqzcw.supabase.co/functions/v1
 
 let selectedPlan = 'early';
 const plans = {
-  early: { price: 997, label: 'R$ 997', install: 'ou 12x de R$ 97,90', name: 'Imersão Reino & Riqueza — Acesso Antecipado' },
-  regular: { price: 1497, label: 'R$ 1.497', install: 'ou 12x de R$ 139,90', name: 'Imersão Reino & Riqueza — Regular' }
+  early: { price: 497, label: 'R$ 497', install: 'ou 12x de R$ 48,90', name: 'Imersão Reino & Riqueza — 1º Lote' },
+  second: { price: 997, label: 'R$ 997', install: 'ou 12x de R$ 97,90', name: 'Imersão Reino & Riqueza — 2º Lote' },
+  regular: { price: 1497, label: 'R$ 1.497', install: 'ou 12x de R$ 139,90', name: 'Imersão Reino & Riqueza — 3º Lote' }
 };
 
 function selectPlan(plan) {
@@ -244,7 +255,8 @@ function selectPlan(plan) {
   document.getElementById('plan-' + plan).classList.add('selected');
   document.getElementById('total-display').textContent = plans[plan].label;
   document.getElementById('install-display').textContent = plans[plan].install;
-  document.getElementById('bonus-item').style.display = plan === 'early' ? 'flex' : 'none';
+  const bonusEl = document.getElementById('bonus-item');
+  if (bonusEl) bonusEl.style.display = plan === 'early' ? 'flex' : 'none';
 }
 
 function showAlert(msg, type) {
